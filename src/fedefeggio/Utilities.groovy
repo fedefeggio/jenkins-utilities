@@ -7,7 +7,7 @@ class Utilities implements Serializable {
     Utilities(steps) { this.steps = steps }
 
     def sudoSh(String sudoPwd, String command) {
-        withEnv(['SUDO_PWD=' sudoPwd, 'COMMAND=' + command]) {
+        withEnv(['SUDO_PWD=' + sudoPwd, 'COMMAND=' + command]) {
             steps.sh '''
                 echo \"${SUDO_PWD}\" | sudo -S ${COMMAND}
             '''
