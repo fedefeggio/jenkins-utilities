@@ -7,7 +7,7 @@ class Utilities implements Serializable {
     Utilities(steps) { this.steps = steps }
 
     def sudoSh(String sudoPwd, String command) {
-        withEnv(['SUDO_PWD=' + sudoPwd, 'COMMAND=' + command]) {
+        steps.withEnv(['SUDO_PWD=' + sudoPwd, 'COMMAND=' + command]) {
             steps.sh '''
                 echo \"${SUDO_PWD}\" | sudo -S ${COMMAND}
             '''
@@ -16,10 +16,10 @@ class Utilities implements Serializable {
 
     def tryRunPm2Process(repoName, fullEnvName, workspaceName) {
         try {
-            sh "pm2 restart '${repoName}:${workspaceName}:${fullEnvName}' --update-env";
+            steps.sh "pm2 restart '${repoName}:${workspaceName}:${fullEnvName}' --update-env";
         } catch (Exception e) {
-            echo 'restart failed, attempting to launch it as new...';
-            sh "npm run ${fullEnvName}:pm2 --workspace=${workspaceName}";
+            steps.echo 'restart failed, attempting to launch it as new...';
+            steps.sh "npm run ${fullEnvName}:pm2 --workspace=${workspaceName}";
         }
     }
 
@@ -29,18 +29,18 @@ class Utilities implements Serializable {
             tryRunPm2Process(repoName, fullEnvName, workspaceName);
         }
         catch(Exception e1) {
-            echo 'stopping the process...';
+            steps.echo 'stopping the process...';
             try {
                 // stop the process
-                sh "pm2 stop '${repoName}:${workspaceName}:${fullEnvName}'";
+                steps.sh "pm2 stop '${repoName}:${workspaceName}:${fullEnvName}'";
             }
             catch(Exception e2){
-                echo 'cannot stop the process';
+                steps.echo 'cannot stop the process';
             }
 
             // delete the process
-            echo 'deleting the process...';
-            sh "pm2 del '${repoName}:${workspaceName}:${fullEnvName}'";
+            steps.echo 'deleting the process...';
+            steps.sh "pm2 del '${repoName}:${workspaceName}:${fullEnvName}'";
 
             // start or restart the process
             tryRunPm2Process(repoName, fullEnvName, workspaceName);
