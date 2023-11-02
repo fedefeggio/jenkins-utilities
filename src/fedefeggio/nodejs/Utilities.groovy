@@ -50,21 +50,20 @@ class Utilities implements Serializable {
 
     def typeormSetup(Boolean isStaging) {
         if(isStaging){
-            sh 'npm run typeorm:setup:staging --workspace=backend';
+            steps.sh 'npm run typeorm:setup:staging --workspace=backend';
         }
         else {
-            sh 'npm run typeorm:setup --workspace=backend';
+            steps.sh 'npm run typeorm:setup --workspace=backend';
         }
-        sh 'npm run prettier --workspace=backend';
+        steps.sh 'npm run prettier --workspace=backend';
     }
 
     def typeormSync(Boolean isStaging) {
-        echo 'syncing db...';
         if(isStaging){
-            sh 'npm run typeorm:sync:staging --workspace=backend';
+            steps.sh 'npm run typeorm:sync:staging --workspace=backend';
         }
         else {
-            sh 'npm run typeorm:sync --workspace=backend';
+            steps.sh 'npm run typeorm:sync --workspace=backend';
         }
     }
 
